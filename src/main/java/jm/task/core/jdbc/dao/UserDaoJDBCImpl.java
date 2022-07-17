@@ -11,14 +11,14 @@ import java.util.Optional;
 
 public class UserDaoJDBCImpl implements UserDao {
 
-    private Util util;
-    private final Optional<Connection> connectionOptional = Optional.ofNullable(util.createConnection());
+    private final Util util;
 
     public UserDaoJDBCImpl() {
         this.util = new Util();
     }
 
     public void createUsersTable() {
+        Optional<Connection> connectionOptional = util.createConnection();
         String sql = "CREATE TABLE IF NOT EXISTS `user` (\n" +
                 "  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
                 "  `name` varchar(255) COLLATE 'utf8_general_ci' NOT NULL,\n" +
@@ -35,6 +35,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
+        Optional<Connection> connectionOptional = util.createConnection();
         if (connectionOptional.isPresent()) {
             try (Statement statement = connectionOptional.get().createStatement()) {
                 statement.executeUpdate("DROP TABLE IF EXISTS user");
@@ -45,6 +46,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
+        Optional<Connection> connectionOptional = util.createConnection();
         String sql = "INSERT INTO `user` (`name`, `lastName`, `age`) VALUES (?, ?, ?);";
         if (connectionOptional.isPresent()) {
             try (PreparedStatement ps = connectionOptional.get().prepareStatement(sql)) {
@@ -59,6 +61,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
+        Optional<Connection> connectionOptional = util.createConnection();
         String sql = "DELETE FROM user WHERE id = ?";
         if (connectionOptional.isPresent()) {
             try (PreparedStatement ps = connectionOptional.get().prepareStatement(sql)) {
@@ -70,6 +73,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
+        Optional<Connection> connectionOptional = util.createConnection();
         String sql = "SELECT id, name, lastName, age FROM user";
         if (connectionOptional.isPresent()) {
             try (Statement statement = connectionOptional.get().createStatement()) {
@@ -92,6 +96,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
+        Optional<Connection> connectionOptional = util.createConnection();
         String sql = "TRUNCATE TABLE user";
         if (connectionOptional.isPresent()) {
             try (Statement statement = connectionOptional.get().createStatement()) {

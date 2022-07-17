@@ -2,19 +2,21 @@ package jm.task.core.jdbc.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Optional;
 
 public class Util {
 
-    public Connection createConnection() {
+    public Optional<Connection> createConnection() {
         try {
-            return DriverManager.getConnection(
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return Optional.of(
+                    DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/user",
                     "root",
-                    "root");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+                    "root"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 }
